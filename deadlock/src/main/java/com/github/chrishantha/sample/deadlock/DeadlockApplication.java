@@ -58,7 +58,7 @@ public class DeadlockApplication implements SampleApplication {
     }
 
     @Override
-    public void start() {
+    public void start() throws InterruptedException {
         final String nameFormat = "Thread Group %2d-%d";
         for (int i = 1; i <= count; i++) {
             final Object lock1 = new Object();
@@ -68,12 +68,11 @@ public class DeadlockApplication implements SampleApplication {
             t1.start();
             t2.start();
             if (delay > 0) {
-                try {
                     Thread.sleep(delay);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                    t1.join();
+                    t2.join();
             }
+
         }
     }
 

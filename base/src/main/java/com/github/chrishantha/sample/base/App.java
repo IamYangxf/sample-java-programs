@@ -27,9 +27,12 @@ public class App {
     private static class CommonArgs {
         @Parameter(names = {"-h", "--help"}, description = "Display Help", help = true)
         private boolean help = false;
+
+        @Parameter(names = {"-once", "--once"}, description = "Execute Once, by default repeatedly")
+        private boolean once = false;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // There should be only one application
         Iterator<SampleApplication> applicationIterator = ServiceLoader.load(SampleApplication.class).iterator();
         if (!applicationIterator.hasNext()) {
@@ -55,7 +58,13 @@ public class App {
             return;
         }
 
-        System.out.println(sampleApplication);
+        System.out.println(sampleApplication + (commonArgs.once?" Once" : " repeatedly"));
         sampleApplication.start();
+        // Just to make it easy for my experimental usage
+        while (!commonArgs.once) {
+            System.out.println("Will launch " + sampleApplication + " again in 100ms");
+            Thread.sleep(100L);
+            sampleApplication.start();
+        }
     }
 }

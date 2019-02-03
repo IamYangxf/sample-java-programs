@@ -18,6 +18,9 @@ package com.github.chrishantha.sample.allocations;
 import com.beust.jcommander.Parameter;
 import com.github.chrishantha.sample.base.SampleApplication;
 
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
 public class AllocationsApplication implements SampleApplication {
 
     @Parameter(names = "--max", description = "Max Numbers")

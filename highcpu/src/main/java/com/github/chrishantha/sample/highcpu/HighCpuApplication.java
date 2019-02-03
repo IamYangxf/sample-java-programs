@@ -19,6 +19,8 @@ import com.beust.jcommander.Parameter;
 import com.github.chrishantha.sample.base.SampleApplication;
 import com.github.chrishantha.sample.base.Utils;
 
+import java.util.ArrayList;
+
 public class HighCpuApplication implements SampleApplication {
 
     @Parameter(names = "--run-hashing", description = "Run Hashing Worker", arity = 1)
@@ -48,8 +50,9 @@ public class HighCpuApplication implements SampleApplication {
     @Parameter(names = "--exit-timeout", description = "Exit Timeout in Seconds (Default 2 minutes. Use 0 to run forever)")
     private int exitTimeoutInSeconds = 2 * 60;
 
+    private ArrayList<Thread> workers  = new ArrayList<>();
     @Override
-    public void start() {
+    public void start() throws InterruptedException {
         System.out.println("Starting Application...");
         Utils.exitApplication(exitTimeoutInSeconds);
         if (runHashing) {
@@ -67,12 +70,17 @@ public class HighCpuApplication implements SampleApplication {
                 startThread(i, "Math", new MathWorker());
             }
         }
+
+        for (Thread t : workers) {
+            t.join();
+        }
     }
 
     private void startThread(int i, String name, Runnable worker) {
         Thread thread = new Thread(worker);
         thread.setName(String.format("Thread %d: %s", i, name));
         thread.start();
+        workers.add(thread);
     }
 
     @Override

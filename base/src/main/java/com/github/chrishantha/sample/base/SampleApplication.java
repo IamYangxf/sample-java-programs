@@ -15,9 +15,11 @@
  */
 package com.github.chrishantha.sample.base;
 
+
 public interface SampleApplication {
 
-    void start();
+    void start() throws InterruptedException;
 
     String toString();
+
 }

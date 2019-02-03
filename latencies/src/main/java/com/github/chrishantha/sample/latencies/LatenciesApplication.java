@@ -70,9 +70,13 @@ public class LatenciesApplication implements SampleApplication {
     }
 
     @Override
-    public void start() {
-        new EvenThread().start();
-        new OddThread().start();
+    public void start() throws InterruptedException {
+        Thread e = new EvenThread();
+        Thread o= new OddThread();
+        e.start();
+        o.start();
+        e.join();
+        o.join();
     }
 
     @Override
